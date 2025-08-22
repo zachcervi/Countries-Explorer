@@ -4,11 +4,11 @@ import { useCountries } from "../hooks/useCountries";
 import styles from "./Home.module.css";
 
 export function Home() {
-  const { countries, loading, error, searchCounties, filterByRegion } =
+  const { countries, loading, error, searchCountries, filterByRegion } =
     useCountries();
 
   const handleSearch = (searchTerm) => {
-    searchCounties(searchTerm);
+    searchCountries(searchTerm);
   };
 
   const handleRegionFilter = (region) => {

@@ -14,7 +14,9 @@ describe("Home Page", () => {
   it("renders the welcome message", () => {
     render(<Home />);
     expect(
-      screen.getByText("Welcome to the Countries Explorer app!")
+      screen.getByText(
+        "Discover amazing facts, cultures, and information about countries from around the world"
+      )
     ).toBeInTheDocument();
   });
   it("has the correct page structure", () => {
@@ -114,30 +116,36 @@ describe("Home Component Integration", () => {
     });
   });
 
-  it("searches countries when typing in search input", async () => {
-    const user = userEvent.setup();
+   it("searches countries when typing in search input", async () => {
+     const user = userEvent.setup();
 
-    countriesApi.fetchAllCountries.mockResolvedValue([]);
-    countriesApi.searchCountries.mockResolvedValue([
-      {
-        name: { common: "Japan" },
-        flags: { png: "https://example.com/japan.png" },
-        population: 125000000,
-        region: "Asia",
-        capital: ["Tokyo"],
-        cca3: "JPN",
-      },
-    ]);
+     // Initial load
+     countriesApi.fetchAllCountries.mockResolvedValue([]);
+     // Search result
+     countriesApi.searchCountries.mockResolvedValue([
+       {
+         name: { common: "Japan" },
+         flags: { png: "https://example.com/japan.png" },
+         population: 125000000,
+         region: "Asia",
+         capital: ["Tokyo"],
+         cca3: "JPN",
+       },
+     ]);
 
-    render(<Home />);
+     render(<Home />);
 
-    const searchInput = screen.getByPlaceholderText(/search countries/i);
-    await user.type(searchInput, "Japan");
+     const searchInput = screen.getByPlaceholderText(/search countries/i);
+     await user.type(searchInput, "Japan");
 
-    await waitFor(() => {
-      expect(countriesApi.searchCountries).toHaveBeenCalledWith("Japan");
-    });
-  });
+     // Wait for debounce delay (300ms) plus some buffer
+     await waitFor(
+       () => {
+         expect(countriesApi.searchCountries).toHaveBeenCalledWith("Japan");
+       },
+       { timeout: 1000 }
+     );
+   });
 
   it("filters countries when selecting a region", async () => {
     const user = userEvent.setup();

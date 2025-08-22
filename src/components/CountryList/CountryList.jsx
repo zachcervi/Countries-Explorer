@@ -6,7 +6,7 @@ export function CountryList({ countries, loading }) {
     return (
       <div className={styles.loadingContainer}>
         <div data-testid="loading-spinner" className={styles.spinner}></div>
-        <p className={styles.loadingText}>Loading countries...</p>
+        <p className={styles.loadingText}>Discovering amazing countries...</p>
       </div>
     );
   }
@@ -17,8 +17,15 @@ export function CountryList({ countries, loading }) {
         <div className={styles.emptyIcon}>🌍</div>
         <h3 className={styles.emptyTitle}>No countries found</h3>
         <p className={styles.emptyText}>
-          Try adjusting your search or filter criteria
+          We couldn't find any countries matching your search criteria. Try a
+          different search term or region filter.
         </p>
+        <div className={styles.emptyActions}>
+          <p className={styles.emptyActionText}>Try searching for:</p>
+          <div className={styles.emptyActionHint}>
+            🔍 Country names, regions, or capitals
+          </div>
+        </div>
       </div>
     );
   }

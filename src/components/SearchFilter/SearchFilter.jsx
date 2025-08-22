@@ -1,8 +1,25 @@
+import { useState, useEffect, useRef } from "react";
 import styles from "./SearchFilter.module.css";
 
 export function SearchFilter({ onSearch, onRegionFilter }) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const onSearchRef = useRef(onSearch);
+
+
+  useEffect(() => {
+    onSearchRef.current = onSearch;
+  });
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onSearchRef.current?.(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]); 
+
   const handleSearchChange = (e) => {
-    onSearch?.(e.target.value);
+    setSearchTerm(e.target.value);
   };
 
   const handleRegionChange = (e) => {
@@ -16,6 +33,7 @@ export function SearchFilter({ onSearch, onRegionFilter }) {
           type="text"
           placeholder="Search countries..."
           aria-label="Search countries"
+          value={searchTerm}
           onChange={handleSearchChange}
           className={styles.searchInput}
         />
