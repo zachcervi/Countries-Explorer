@@ -92,7 +92,7 @@ describe("Countries API Service", () => {
       const result = await fetchCountryByName("Japan");
 
       expect(fetch).toHaveBeenCalledWith(
-        "https://restcountries.com/v3.1/name/Japan?fullText=true"
+        "https://restcountries.com/v3.1/name/Japan?fullText=true&fields=name,flags,population,region,subregion,capital,languages,currencies,borders,timezones,cca3"
       );
       expect(result).toEqual(mockCountry);
     });
