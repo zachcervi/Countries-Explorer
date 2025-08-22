@@ -10,6 +10,9 @@
   cursor: pointer;
   outline: none;
   position: relative;
+  height: 280px;
+  display: flex;
+  flex-direction: column;
 }
 
 .card::before {
@@ -30,8 +33,8 @@
 }
 
 .card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25),
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.4);
   border-color: rgba(255, 255, 255, 0.4);
 }
@@ -46,7 +49,7 @@
 }
 
 .card:active {
-  transform: translateY(-3px) scale(1.01);
+  transform: translateY(-4px) scale(1.01);
 }
 
 .flagContainer {
@@ -55,8 +58,7 @@
   overflow: hidden;
   background: rgba(241, 245, 249, 0.9);
   position: relative;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  /* Remove backdrop-filter from flag container to avoid blur interference */
+  flex-shrink: 0;
 }
 
 .flag {
@@ -65,26 +67,16 @@
   object-fit: cover;
   object-position: center;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  /* Enhanced image rendering for crisp flags */
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
-  image-rendering: pixelated;
-  /* Fallback for browsers that don't support the above */
   image-rendering: auto;
-  /* Prevent blur from browser scaling */
   backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
   transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  /* Anti-aliasing for smoother edges */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  /* Filter for enhanced contrast and sharpness */
   filter: contrast(1.05) saturate(1.1) brightness(1.02);
 }
 
 .card:hover .flag {
-  transform: scale(1.08) translateZ(0);
+  transform: scale(1.1) translateZ(0);
   filter: contrast(1.08) saturate(1.15) brightness(1.05);
 }
 
@@ -108,74 +100,42 @@
 }
 
 .flagIcon {
-  font-size: 2.5rem;
+  font-size: 3rem;
   margin-bottom: 0.5rem;
   opacity: 0.8;
-  filter: drop-shadow(0 2px 8px rgba(100, 116, 139, 0.3));
 }
 
 .flagText {
   font-size: 0.875rem;
   font-weight: 600;
   text-align: center;
-  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
 }
 
 .content {
-  padding: 1.8rem;
+  padding: 1.5rem;
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(15px);
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .countryName {
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: rgba(255, 255, 255, 0.95);
-  margin: 0 0 1.2rem 0;
+  margin: 0;
   line-height: 1.2;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   letter-spacing: -0.01em;
-}
-
-.details {
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
-}
-
-.detail {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.detail:last-child {
-  border-bottom: none;
-}
-
-.label {
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.9rem;
-  flex-shrink: 0;
-  min-width: 85px;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.value {
-  color: rgba(255, 255, 255, 0.95);
-  font-weight: 600;
-  text-align: right;
-  word-break: break-word;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
   .card {
+    height: 240px;
     border-radius: 16px;
   }
 
@@ -184,39 +144,15 @@
   }
 
   .content {
-    padding: 1.4rem;
+    padding: 1rem;
   }
 
   .countryName {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
 
-  .detail {
-    flex-direction: column;
-    gap: 0.3rem;
-    padding: 0.4rem 0;
-  }
-
-  .label {
-    min-width: auto;
-  }
-
-  .value {
-    text-align: left;
-  }
-}
-
-/* High-DPI display optimization */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .flag {
-    /* Enhanced sharpening for retina displays */
-    filter: contrast(1.08) saturate(1.12) brightness(1.03)
-      unsharp-mask(1px 1px 0.5px);
-  }
-
-  .card:hover .flag {
-    filter: contrast(1.1) saturate(1.17) brightness(1.06)
-      unsharp-mask(1px 1px 0.5px);
+  .flagIcon {
+    font-size: 2.5rem;
   }
 }
 
@@ -239,14 +175,6 @@
     color: #f8fafc;
   }
 
-  .label {
-    color: #cbd5e1;
-  }
-
-  .value {
-    color: #e2e8f0;
-  }
-
   .flagPlaceholder {
     background: linear-gradient(
       135deg,
@@ -256,7 +184,6 @@
     color: #94a3b8;
   }
 
-  /* Enhanced flag visibility in dark mode */
   .flag {
     filter: contrast(1.1) saturate(1.15) brightness(1.05);
   }
