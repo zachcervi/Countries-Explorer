@@ -18,16 +18,16 @@ describe("SearchFilter Component", () => {
     render(<SearchFilter onSearch={mockOnSearch} />);
     const searchInput = screen.getByPlaceholderText(/search countries/i);
     await user.type(searchInput, "Canada");
-  })
-    it("calls onRegionFilter when selecting a region", async () => {
-      const mockOnRegionFilter = vi.fn();
-      const user = userEvent.setup();
+  });
+  it("calls onRegionFilter when selecting a region", async () => {
+    const mockOnRegionFilter = vi.fn();
+    const user = userEvent.setup();
 
-      render(<SearchFilter onRegionFilter={mockOnRegionFilter} />);
+    render(<SearchFilter onRegionFilter={mockOnRegionFilter} />);
 
-      const regionSelect = screen.getByLabelText(/filter by region/i);
-      await user.selectOptions(regionSelect, "americas");
+    const regionSelect = screen.getByLabelText(/filter by region/i);
+    await user.selectOptions(regionSelect, "americas");
 
-      expect(mockOnRegionFilter).toHaveBeenCalledWith("americas");
-    });
+    expect(mockOnRegionFilter).toHaveBeenCalledWith("americas");
+  });
 });
