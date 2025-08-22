@@ -28,13 +28,26 @@ describe("Home Page", () => {
   });
   it("renders a countries list section", () => {
     render(<Home />);
-    const countriesSection =
-      ServiceWorkerContainer.getByTestId("countries-section");
+    const countriesSection = screen.getByTestId("countries-section");
     expect(countriesSection).toBeInTheDocument();
   });
   it("has proper HTML structure", () => {
-    render(<Home />);
+    const searchInput = screen.getByPlaceholderText(/search countries/i);
+    expect(searchInput).toBeInTheDocument();
     expect(screen.getByRole("main")).toBeInTheDocument();
     expect(screen.getByRole("banner")).toBeInTheDocument();
+  });
+});
+
+describe("Home Component Search", () => {
+  it("renders a search input", () => {
+    render(<Home />);
+    const searchInput = screen.getByPlaceholderText(/search countries/i);
+    expect(searchInput).toBeInTheDocument();
+  });
+  it("renders a region filter", () => {
+    render(<Home />);
+    const regionFilter = screen.getByLabelText(/filter by region/i);
+    expect(regionFilter).toBeInTheDocument();
   });
 });
