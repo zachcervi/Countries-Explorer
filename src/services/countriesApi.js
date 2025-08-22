@@ -81,3 +81,26 @@ export async function filterByRegion(region) {
     throw new Error("Failed to filter by region");
   }
 }
+
+export async function fetchCountryByCode(code) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/alpha/${code}?fields=${DETAIL_FIELDS}`
+    );
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error("Country not found");
+      }
+      throw new Error("Failed to fetch country");
+    }
+
+    const countries = await response.json();
+    return Array.isArray(countries) ? countries[0] : countries;
+  } catch (error) {
+    if (error.message === "Country not found") {
+      throw error;
+    }
+    throw new Error("Failed to fetch country");
+  }
+}
