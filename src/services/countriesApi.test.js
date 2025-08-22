@@ -2,10 +2,12 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
   fetchAllCountries,
   fetchCountryByName,
+  fetchCountryByCode,
   searchCountries,
   filterByRegion,
 } from "./countriesApi";
 
+// Mock fetch globally
 global.fetch = vi.fn();
 
 describe("Countries API Service", () => {
@@ -65,6 +67,63 @@ describe("Countries API Service", () => {
 
       await expect(fetchAllCountries()).rejects.toThrow(
         "Failed to fetch countries"
+      );
+    });
+  });
+
+  describe("fetchCountryByCode", () => {
+    it("fetches a specific country by code", async () => {
+      const mockCountry = {
+        name: { common: "Japan", official: "Japan" },
+        flags: { png: "https://example.com/japan.png" },
+        population: 125000000,
+        region: "Asia",
+        subregion: "Eastern Asia",
+        capital: ["Tokyo"],
+        languages: { jpn: "Japanese" },
+        currencies: { JPY: { name: "Japanese yen", symbol: "¥" } },
+        borders: ["CHN", "KOR", "RUS"],
+        timezones: ["UTC+09:00"],
+        cca3: "JPN",
+      };
+
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockCountry,
+      });
+
+      const result = await fetchCountryByCode("JPN");
+
+      expect(fetch).toHaveBeenCalledWith(
+        "https://restcountries.com/v3.1/alpha/JPN?fields=name,flags,population,region,subregion,capital,languages,currencies,borders,timezones,cca3"
+      );
+      expect(result).toEqual(mockCountry);
+    });
+
+    it("handles array response from API", async () => {
+      const mockCountry = {
+        name: { common: "Japan" },
+        cca3: "JPN",
+      };
+
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => [mockCountry],
+      });
+
+      const result = await fetchCountryByCode("JPN");
+
+      expect(result).toEqual(mockCountry);
+    });
+
+    it("throws error when country is not found", async () => {
+      fetch.mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+      });
+
+      await expect(fetchCountryByCode("XXX")).rejects.toThrow(
+        "Country not found"
       );
     });
   });

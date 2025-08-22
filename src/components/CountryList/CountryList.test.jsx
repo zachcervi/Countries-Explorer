@@ -1,6 +1,22 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { CountryList } from "./CountryList";
+import { BrowserRouter } from "react-router-dom";
+
+
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
+
+const renderWithRouter = (component) => {
+  return render(<BrowserRouter>{component}</BrowserRouter>);
+};
+
 
 describe("CountryList Component", () => {
   const mockCountries = [
@@ -23,14 +39,14 @@ describe("CountryList Component", () => {
   ];
 
   it("shows loading state when loading is true", () => {
-    render(<CountryList countries={[]} loading={true} />);
+    renderWithRouter(<CountryList countries={[]} loading={true} />);
 
     expect(screen.getByTestId("loading-spinner")).toBeInTheDocument();
     expect(screen.queryByText("Japan")).not.toBeInTheDocument();
   });
 
   it("renders countries when provided", () => {
-    render(<CountryList countries={mockCountries} loading={false} />);
+    renderWithRouter(<CountryList countries={mockCountries} loading={false} />);
 
     expect(screen.getByText("Japan")).toBeInTheDocument();
     expect(screen.getByText("France")).toBeInTheDocument();
@@ -38,21 +54,21 @@ describe("CountryList Component", () => {
   });
 
   it("shows empty state when no countries and not loading", () => {
-    render(<CountryList countries={[]} loading={false} />);
+    renderWithRouter(<CountryList countries={[]} loading={false} />);
 
     expect(screen.getByText(/no countries found/i)).toBeInTheDocument();
     expect(screen.queryByTestId("loading-spinner")).not.toBeInTheDocument();
   });
 
   it("renders the correct number of countries", () => {
-    render(<CountryList countries={mockCountries} loading={false} />);
+    renderWithRouter(<CountryList countries={mockCountries} loading={false} />);
 
     const countryCards = screen.getAllByTestId("country-card");
     expect(countryCards).toHaveLength(2);
   });
 
   it("has accessible list structure", () => {
-    render(<CountryList countries={mockCountries} loading={false} />);
+    renderWithRouter(<CountryList countries={mockCountries} loading={false} />);
 
     const list = screen.getByRole("list");
     expect(list).toBeInTheDocument();

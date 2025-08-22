@@ -1,18 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import styles from "./CountryCard.module.css";
 
-export function CountryCard({ country, onClick, ...props }) {
-  const formatPopulation = (population) => {
-    return population?.toLocaleString() || "N/A";
-  };
-
-  const getCapitalText = (capital) => {
-    if (!capital || capital.length === 0) return "N/A";
-    return capital.join(", ");
-  };
+export function CountryCard({ country, ...props }) {
+  const navigate = useNavigate();
 
   const getFlagUrl = (flags) => {
     if (!flags) return null;
-    // Prefer SVG for crisp display, fallback to PNG
     return flags.svg || flags.png || null;
   };
 
@@ -22,7 +15,7 @@ export function CountryCard({ country, onClick, ...props }) {
   };
 
   const handleClick = () => {
-    onClick?.(country);
+    navigate(`/country/${country.cca3}`);
   };
 
   const handleKeyDown = (e) => {
@@ -36,13 +29,11 @@ export function CountryCard({ country, onClick, ...props }) {
     const img = e.target;
     const placeholder = img.nextElementSibling;
 
-    // If SVG failed, try PNG as fallback
     if (img.src.includes(".svg") && country?.flags?.png) {
       img.src = country.flags.png;
       return;
     }
 
-    // If both failed, show placeholder
     img.style.display = "none";
     if (placeholder) {
       placeholder.style.display = "flex";
@@ -71,7 +62,6 @@ export function CountryCard({ country, onClick, ...props }) {
             loading="lazy"
             decoding="async"
             onError={handleImageError}
-            // Add sizes attribute for responsive images
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 320px"
           />
         ) : null}
@@ -86,27 +76,6 @@ export function CountryCard({ country, onClick, ...props }) {
 
       <div className={styles.content}>
         <h3 className={styles.countryName}>{countryName}</h3>
-
-        <div className={styles.details}>
-          <div className={styles.detail}>
-            <span className={styles.label}>Population:</span>
-            <span className={styles.value}>
-              {formatPopulation(country?.population)}
-            </span>
-          </div>
-
-          <div className={styles.detail}>
-            <span className={styles.label}>Region:</span>
-            <span className={styles.value}>{country?.region || "N/A"}</span>
-          </div>
-
-          <div className={styles.detail}>
-            <span className={styles.label}>Capital:</span>
-            <span className={styles.value}>
-              {getCapitalText(country?.capital)}
-            </span>
-          </div>
-        </div>
       </div>
     </article>
   );

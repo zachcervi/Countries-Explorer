@@ -1,5 +1,5 @@
 {
-  "name": "katas-countries",
+  "name": "countries-explorer",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -18,7 +18,8 @@
     "@testing-library/user-event": "^14.6.1",
     "firebase": "^12.1.0",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.8.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
