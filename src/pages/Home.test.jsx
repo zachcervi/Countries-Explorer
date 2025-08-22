@@ -50,3 +50,13 @@ describe("Home Component Search", () => {
     expect(regionFilter).toBeInTheDocument();
   });
 });
+
+describe("Home Component Integration", () => {
+  it("contains search filter component", () => {
+    render(<Home />);
+    expect(
+      screen.getByPlaceholderText(/search countries/i)
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText(/filter by region/i)).toBeInTheDocument();
+  });
+});
