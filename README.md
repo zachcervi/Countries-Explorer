@@ -88,4 +88,5 @@ npm run deploy
 
 - Expand features (search filters, sorting, favorites)
 
- - Create a User Account
+- Create a User Account
+- Hosting is having issues on mobile
