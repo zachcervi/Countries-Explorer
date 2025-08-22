@@ -32,8 +32,7 @@ describe("Home Page", () => {
     expect(countriesSection).toBeInTheDocument();
   });
   it("has proper HTML structure", () => {
-    const searchInput = screen.getByPlaceholderText(/search countries/i);
-    expect(searchInput).toBeInTheDocument();
+    render(<Home />);
     expect(screen.getByRole("main")).toBeInTheDocument();
     expect(screen.getByRole("banner")).toBeInTheDocument();
   });
@@ -42,7 +41,7 @@ describe("Home Page", () => {
 describe("Home Component Search", () => {
   it("renders a search input", () => {
     render(<Home />);
-    const searchInput = screen.getByPlaceholderText(/search countries/i);
+    const searchInput = screen.getByPlaceholderText(/Search countries/i);
     expect(searchInput).toBeInTheDocument();
   });
   it("renders a region filter", () => {
