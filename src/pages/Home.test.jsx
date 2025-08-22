@@ -2,17 +2,32 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Home } from "./Home";
+import { BrowserRouter } from "react-router-dom";
 import * as countriesApi from "../services/countriesApi";
 
 vi.mock("../services/countriesApi");
+// Mock useNavigate
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
+
+const renderWithRouter = (component) => {
+  return render(<BrowserRouter>{component}</BrowserRouter>);
+};
+
 
 describe("Home Page", () => {
   it("renders the main heading", () => {
-    render(<Home />);
+    renderWithRouter(<Home />);
     expect(screen.getByText("Countries Explorer")).toBeInTheDocument();
   });
   it("renders the welcome message", () => {
-    render(<Home />);
+    renderWithRouter(<Home />);
     expect(
       screen.getByText(
         "Discover amazing facts, cultures, and information about countries from around the world"
@@ -20,25 +35,25 @@ describe("Home Page", () => {
     ).toBeInTheDocument();
   });
   it("has the correct page structure", () => {
-    render(<Home />);
+    renderWithRouter(<Home />);
     const main = screen.getByRole("main");
     expect(main).toBeInTheDocument();
   });
   it("renders without crashing", () => {
-    render(<Home />);
+    renderWithRouter(<Home />);
   });
   it("renders a header section", () => {
-    render(<Home />);
+    renderWithRouter(<Home />);
     const header = screen.getByRole("banner");
     expect(header).toBeInTheDocument();
   });
   it("renders a countries list section", () => {
-    render(<Home />);
+    renderWithRouter(<Home />);
     const countriesSection = screen.getByTestId("countries-section");
     expect(countriesSection).toBeInTheDocument();
   });
   it("has proper HTML structure", () => {
-    render(<Home />);
+    renderWithRouter(<Home />);
     expect(screen.getByRole("main")).toBeInTheDocument();
     expect(screen.getByRole("banner")).toBeInTheDocument();
   });
@@ -46,12 +61,12 @@ describe("Home Page", () => {
 
 describe("Home Component Search", () => {
   it("renders a search input", () => {
-    render(<Home />);
+    renderWithRouter(<Home />);
     const searchInput = screen.getByPlaceholderText(/Search countries/i);
     expect(searchInput).toBeInTheDocument();
   });
   it("renders a region filter", () => {
-    render(<Home />);
+    renderWithRouter(<Home />);
     const regionFilter = screen.getByLabelText(/filter by region/i);
     expect(regionFilter).toBeInTheDocument();
   });
@@ -65,7 +80,7 @@ describe("Home Component Integration", () => {
   it("renders with loading state initially", () => {
     countriesApi.fetchAllCountries.mockResolvedValue([]);
 
-    render(<Home />);
+    renderWithRouter(<Home />);
 
     expect(screen.getByText("Countries Explorer")).toBeInTheDocument();
     expect(screen.getByText(/discover amazing facts/i)).toBeInTheDocument();
@@ -96,7 +111,7 @@ describe("Home Component Integration", () => {
 
     countriesApi.fetchAllCountries.mockResolvedValue(mockCountries);
 
-    render(<Home />);
+    renderWithRouter(<Home />);
 
     await waitFor(() => {
       expect(screen.getByText("Japan")).toBeInTheDocument();
@@ -109,7 +124,7 @@ describe("Home Component Integration", () => {
   it("shows error message when API fails", async () => {
     countriesApi.fetchAllCountries.mockRejectedValue(new Error("API Error"));
 
-    render(<Home />);
+    renderWithRouter(<Home />);
 
     await waitFor(() => {
       expect(screen.getByText(/failed to load countries/i)).toBeInTheDocument();
@@ -133,7 +148,7 @@ describe("Home Component Integration", () => {
       },
     ]);
 
-    render(<Home />);
+    renderWithRouter(<Home />);
 
     const searchInput = screen.getByPlaceholderText(/search countries/i);
     await user.type(searchInput, "Japan");
@@ -161,7 +176,7 @@ describe("Home Component Integration", () => {
       },
     ]);
 
-    render(<Home />);
+    renderWithRouter(<Home />);
 
     const regionSelect = screen.getByLabelText(/filter by region/i);
     await user.selectOptions(regionSelect, "asia");
@@ -172,7 +187,7 @@ describe("Home Component Integration", () => {
   });
 
   it("contains search filter component", () => {
-    render(<Home />);
+    renderWithRouter(<Home />);
     expect(
       screen.getByPlaceholderText(/search countries/i)
     ).toBeInTheDocument();

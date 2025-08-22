@@ -27,7 +27,7 @@ describe("CountryDetails Component", () => {
   });
 
   it("renders loading state initially", () => {
-    countriesApi.fetchCountryByName.mockImplementation(
+    countriesApi.fetchCountryByCode.mockImplementation(
       () => new Promise(() => {})
     );
 
@@ -41,7 +41,7 @@ describe("CountryDetails Component", () => {
     const mockCountry = {
       name: {
         common: "Japan",
-        official: "Japan",
+        official: "State of Japan",
         nativeName: { jpn: { common: "日本", official: "日本国" } },
       },
       flags: { png: "https://example.com/japan.png", alt: "Flag of Japan" },
@@ -55,15 +55,17 @@ describe("CountryDetails Component", () => {
       timezones: ["UTC+09:00"],
       cca3: "JPN",
     };
-
-    countriesApi.fetchCountryByName.mockResolvedValue(mockCountry);
+    countriesApi.fetchCountryByCode.mockResolvedValue(mockCountry);
 
     renderWithRouter(<CountryDetails />);
 
     await waitFor(() => {
-      expect(screen.getByText("Japan")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Japan" })
+      ).toBeInTheDocument();
     });
 
+    expect(screen.getByText("State of Japan")).toBeInTheDocument();
     expect(screen.getByText("125,000,000")).toBeInTheDocument();
     expect(screen.getByText("Asia")).toBeInTheDocument();
     expect(screen.getByText("Eastern Asia")).toBeInTheDocument();
@@ -72,7 +74,7 @@ describe("CountryDetails Component", () => {
   });
 
   it("shows error message when API fails", async () => {
-    countriesApi.fetchCountryByName.mockRejectedValue(
+    countriesApi.fetchCountryByCode.mockRejectedValue(
       new Error("Country not found")
     );
 
@@ -86,19 +88,20 @@ describe("CountryDetails Component", () => {
   it("navigates back when back button is clicked", async () => {
     const user = userEvent.setup();
     const mockCountry = {
-      name: { common: "Japan" },
+      name: { common: "Japan", official: "State of Japan" },
       flags: { png: "https://example.com/japan.png" },
       population: 125000000,
       region: "Asia",
       cca3: "JPN",
     };
-
-    countriesApi.fetchCountryByName.mockResolvedValue(mockCountry);
+    countriesApi.fetchCountryByCode.mockResolvedValue(mockCountry);
 
     renderWithRouter(<CountryDetails />);
 
     await waitFor(() => {
-      expect(screen.getByText("Japan")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Japan" })
+      ).toBeInTheDocument();
     });
 
     const backButton = screen.getByText(/back to countries/i);
